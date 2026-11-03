@@ -1,0 +1,33 @@
+---
+title: "Case 31 Data Analysis Table"
+subtitle: "IC10-2-2 · Employees Federal Credit Union"
+format: html
+---
+
+The table maps each research question and hypothesis to survey items, measurement scales, and statistical procedures.
+
+| ID | Construct and role | Survey measures | Measurement scale | Statistical analysis |
+|---|---|---|---|---|
+| R1 | Reasons for joining (descriptive) | Q7 share account rate opinion. Q2 direct reasons for joining. | Q7 interval. Q2 nominal, multiple response. | Report Q7 frequencies, mean and SD. One-sample t-test versus 3 (average). For Q2, report count and percent selecting each reason. |
+| R2 | Borrowing screen and reasons for using other lenders (descriptive) | Q28 borrowing screen. Q29 stated reasons. Q8r loan rate opinion and Q30 perceived rate advantage. | Q28 and Q29 nominal. Q8r and Q30 interval. | Use Q28 to identify eligible borrowers. Summarize Q29 by counts and percentages if available. The measurement key flags Q29 as unavailable. Summarize Q8r and Q30 as indirect evidence on perceived rates. |
+| R3 | Attitudes toward employee proficiency (descriptive) | Q3–Q6 courtesy, helpfulness, professionalism and availability. | Interval | Report item summaries. Assess internal consistency and factor structure. If supported, average items as Att_Employee and run a one-sample t-test versus 3 (neutral). |
+| R4a | Residence (IV) and employee proficiency (DV) | Q38 headquarters area. Att_Employee from Q3–Q6. | Q38 nominal (1 yes, 2 no). Composite interval. | Report group means and SDs. Use an independent-samples t-test to compare the two residence groups. |
+| R4b | Residence (IV) and service awareness (DV) | Q38 and each of Q13r–Q26r. | Q38 nominal. Awareness ordinal. | Cross-tabulate residence by each service’s awareness level. Use chi-square tests of independence and report row percentages. |
+| R4c | Residence (IV) and operational effectiveness (DV) | Q38 with Q9r–Q10r, Q11–Q12rc, Q31–Q34 and Q37r. | Q38 nominal. Rating items interval per handout. Q37r nominal. | Report group summaries. Use independent-samples t-tests for interval measures and a chi-square test of independence for Q37r. |
+| R5 | Awareness of credit union services (descriptive) | Q13r–Q26r for 14 services. | Ordinal (1 unaware, 2 aware and never used, 3 aware and used). | Report counts and valid percentages by category for each service. Sum categories 2 and 3 to obtain the awareness percentage. |
+| R6 | Perceived operational effectiveness (descriptive) | Q9r–Q10r, Q11–Q12rc, Q31–Q34 and Q37r. | Rating items interval per handout. Q37r nominal. | Report means and SDs for interval items and counts and valid percentages for Q37r. Use one-sample t-tests for Q31–Q34 against 3 (neutral). |
+| H1 | Regular share account awareness (IV) and adequacy of services (DV) | Q13r awareness and use group. Q33 agreement that services meet members’ needs. | Q13r ordinal. Q33 interval. | One-way ANOVA comparing mean Q33 across the three Q13r groups. Report group means and follow a significant omnibus result with adjusted pairwise comparisons. |
+| H2 | Loan rate opinion and perceived rate advantage (paired outcomes) | Q8r and Q30 from the same member. | Both interval (five-point scales). | Paired-samples t-test of whether the mean Q8r minus Q30 difference equals zero. Report the mean difference and confidence interval for complete pairs. |
+
+## Analysis notes
+
+Use valid responses for each analysis and exclude “no opinion” from numerical ratings. Q11–Q12 are binary in the measurement key. If Q11–Q12rc remain binary after recoding, summarize them as percentages and use chi-square tests for the R4c comparisons. For H2, interpret the difference as a comparison of coded scores because the two questions have different response anchors.
+
+## Sources
+
+IC M08 Data Analysis Table assignment and M04 Construct and Measurement Table assignment key for Case 31.
+
+## Appendix
+
+- [GitHub repository](https://github.com/gmonjarrez/case31-data-analysis)
+- [GitHub Pages](https://gmonjarrez.github.io/case31-data-analysis/)
