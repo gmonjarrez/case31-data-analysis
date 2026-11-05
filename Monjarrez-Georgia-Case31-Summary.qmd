@@ -1,0 +1,244 @@
+---
+title: "Case 31: Summary of Data Analysis"
+subtitle: "IC11-2 · R1, R2, R5, and R6 · Employees Federal Credit Union"
+author: "Georgia Monjarrez"
+date: "2026-11-04"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    transition: fade
+    width: 1280
+    height: 900
+    margin: 0.08
+    center: false
+    embed-resources: true
+    navigation-mode: linear
+    controls: true
+execute:
+  echo: false
+  warning: false
+  message: false
+---
+
+```{r}
+library(haven)
+library(ggplot2)
+d <- read_sav("Case31_GM_cleaned.sav")
+xnum <- function(v) as.numeric(d[[v]])
+fmt <- function(x,k=2) formatC(x,format="f",digits=k)
+pfmt <- function(p) ifelse(p<.001,"< .001",fmt(p,3))
+kt <- function(x,digits=2) knitr::kable(x,row.names=FALSE,digits=digits)
+summary_rows <- function(vars,labels) {
+ do.call(rbind,lapply(seq_along(vars),function(i){
+ x<-na.omit(xnum(vars[i])); data.frame(Item=labels[i],n=length(x),Missing=nrow(d)-length(x),Mean=mean(x),SD=sd(x))
+ }))
+}
+freq <- function(v,lev,labs) {
+ x<-xnum(v); n<-sum(!is.na(x)); counts<-sapply(lev,function(k)sum(x==k,na.rm=TRUE))
+ data.frame(Response=labs,n=counts,`Valid %`=100*counts/n,check.names=FALSE)
+}
+testrow <- function(v,label,mu=3) {
+ x<-na.omit(xnum(v)); t<-t.test(x,mu=mu)
+ data.frame(Item=label,n=length(x),Mean=mean(x),SD=sd(x),Difference=mean(x)-mu,
+ CI_low=t$conf.int[1]-mu,CI_high=t$conf.int[2]-mu,t=unname(t$statistic),df=unname(t$parameter),p=t$p.value)
+}
+r1<-testrow("q7","Savings interest rates")
+ops<-c("q31","q32","q33","q34")
+oplabels<-c("Financial information kept confidential","Loan applications processed promptly","Services meet member needs","Loan applications simple to complete")
+tests<-do.call(rbind,lapply(seq_along(ops),function(i)testrow(ops[i],oplabels[i])))
+tests$p_holm<-p.adjust(tests$p,"holm")
+services<-paste0("q",13:26,"r")
+snames<-c("Regular share accounts","Special subaccounts","Christmas club accounts","Individual retirement accounts","Master credit cards","Signature loans","New car loans","Late model car loans","Older model car loans","Household goods/appliance loans","Recreational loans","Share collateralized loans","IRA loans","Line of credit loans")
+aw<-do.call(rbind,lapply(seq_along(services),function(i){
+ x<-xnum(services[i]); n<-sum(!is.na(x)); u<-sum(x==1,na.rm=TRUE); a<-sum(x==2,na.rm=TRUE); used<-sum(x==3,na.rm=TRUE)
+ data.frame(Service=snames[i],n=n,Missing=nrow(d)-n,Unaware_n=u,Aware_unused_n=a,Used_n=used,Unaware_pct=100*u/n,Aware_unused_pct=100*a/n,Used_pct=100*used/n,Aware_pct=100*(a+used)/n)
+}))
+stopifnot(nrow(d)==128,all(aw$Unaware_n+aw$Aware_unused_n+aw$Used_n==aw$n),all(abs(aw$Unaware_pct+aw$Aware_unused_pct+aw$Used_pct-100)<1e-8))
+write.csv(aw,"service-awareness.csv",row.names=FALSE)
+write.csv(rbind(transform(r1,p_holm=NA),tests),"one-sample-tests.csv",row.names=FALSE)
+```
+
+## Data and methods
+
+- **128 records** from the cleaned Case 31 dataset; percentages use valid responses. No imputation or weighting.
+- Report rating items separately. Means and t-tests treat ratings as approximately interval.
+- Two-sided tests use α = .05, with Holm correction for the four R6 tests.
+- Q2 (joining reasons), Q28 (borrowing screen), and Q29 (outside borrowing reasons) are absent. R1 and R2 therefore use indirect evidence.
+- The case narrative reports 123 usable questionnaires. All 128 supplied records are retained because exclusions cannot be identified.
+
+## R1 · Descriptive statistics: rates are near average
+
+**Question:** Why do people join the Credit Union?
+
+Q7: 1 = very high, 2 = high, 3 = average, 4 = low, 5 = very low. “No opinion” is missing.
+
+```{r}
+#| label: tbl-r1-rates
+#| tbl-cap: "Savings-rate opinions"
+kt(freq("q7",1:5,c("Very high","High","Average","Low","Very low")),1)
+```
+
+**n = `r r1$n`; missing = `r nrow(d)-r1$n`; mean = `r fmt(r1$Mean)`; SD = `r fmt(r1$SD)`.**
+
+Most members rate savings rates as average (@tbl-r1-rates).
+
+## R1 · One-sample t-test: no detected departure
+
+The mean savings-rate rating does not differ significantly from average (one-sample t-test against 3: t(`r r1$df`) = `r fmt(r1$t)`, p = `r pfmt(r1$p)`).
+
+The difference from average is small (mean difference = `r fmt(r1$Difference)`; 95% CI [`r fmt(r1$CI_low)`, `r fmt(r1$CI_high)`]).
+
+Savings-rate opinions alone cannot explain why members joined.
+
+## R2 · Descriptive statistics: rate perceptions
+
+**Question:** Why do members borrow from other financial institutions?
+
+```{r}
+#| label: tbl-r2-ratings
+#| tbl-cap: "Borrowing-rate and competitive-rate perceptions"
+kt(summary_rows(c("q8r","q30"),c("Q8r: Credit union borrowing rates","Q30: Credit union rates lower than competitors")))
+```
+
+- Q8r: **1 = very low; 3 = average; 5 = very high**. Higher scores mean higher perceived rates.
+- Q30: **1 = strongly disagree; 3 = uncertain; 5 = strongly agree** that credit union loan rates are lower than competitors'.
+Both means are near their midpoints (@tbl-r2-ratings).
+
+## R2 · Frequency analysis: borrowing-rate opinions
+
+```{r}
+#| label: tbl-r2-frequency
+#| tbl-cap: "Borrowing-rate opinion frequencies"
+kt(freq("q8r",1:5,c("Very low","Low","Average","High","Very high")),1)
+```
+
+Borrowing-rate opinions cluster around average (@tbl-r2-frequency). Q30 agreement (4–5): **`r fmt(100*mean(xnum("q30")>=4,na.rm=TRUE),1)`%**; uncertain (3): **`r fmt(100*mean(xnum("q30")==3,na.rm=TRUE),1)`%**; disagreement (1–2): **`r fmt(100*mean(xnum("q30")<=2,na.rm=TRUE),1)`%**.
+
+These ratings cover all valid respondents. Without Q28–Q29, reasons for borrowing elsewhere remain unknown.
+
+## R5 · Descriptive statistics: service awareness
+
+```{r}
+#| label: fig-service-awareness
+#| fig-cap: "Percentage aware of each credit union service"
+#| fig-width: 11
+#| fig-height: 5.7
+z<-aw; z$Service<-factor(z$Service,levels=z$Service[order(z$Aware_pct)])
+ggplot(z,aes(Aware_pct,Service))+geom_col(fill="#126859",width=.7)+
+ geom_text(aes(label=paste0(fmt(Aware_pct,1),"%")),hjust=-.15,size=4)+
+ scale_x_continuous(limits=c(0,112),breaks=seq(0,100,25),labels=function(x)paste0(x,"%"))+
+ labs(x="Aware, whether used or unused (% of valid responses)",y=NULL)+
+ theme_minimal(base_size=15)+theme(panel.grid.major.y=element_blank())
+```
+
+## R5 · Awareness and use, services 1–7 {.smaller}
+
+Each cell shows **count (valid %)**. Reversed codes: 1 unaware, 2 aware but unused, 3 aware and used.
+
+```{r}
+#| label: tbl-awareness-first
+#| tbl-cap: "Service awareness and use: services 1–7"
+awtable<-function(rows){
+ a<-aw[rows,]; cell<-function(n,p)paste0(n," (",fmt(p,1),"%)")
+ data.frame(Service=a$Service,Valid=a$n,Missing=a$Missing,Unaware=cell(a$Unaware_n,a$Unaware_pct),`Aware, unused`=cell(a$Aware_unused_n,a$Aware_unused_pct),Used=cell(a$Used_n,a$Used_pct),`Aware %`=fmt(a$Aware_pct,1),check.names=FALSE)
+}
+kt(awtable(1:7))
+```
+
+Aware % combines codes 2 and 3. All 14 awareness items have 128 valid responses.
+
+## R5 · Awareness and use, services 8–14 {.smaller}
+
+```{r}
+#| label: tbl-awareness-second
+#| tbl-cap: "Service awareness and use: services 8–14"
+kt(awtable(8:14))
+```
+
+Nonuse does not necessarily indicate dissatisfaction.
+
+## R5 · Loan services are better known
+
+As @fig-service-awareness, @tbl-awareness-first, and @tbl-awareness-second show:
+
+- Line of credit loans: **100.0% aware**; signature and new car loans: **96.1% aware** each.
+- Regular share accounts: **35.2% aware**; IRA loans: **39.1% aware**; share collateralized loans: **46.1% aware**.
+- Verify the unexpectedly low awareness of regular share accounts. If confirmed, prioritize explaining these accounts and less familiar loan products.
+
+## R6 · Descriptive statistics: account information {.smaller}
+
+```{r}
+#| label: tbl-account-information
+#| tbl-cap: "Statements and account information"
+f9<-freq("q9",1:5,c("Too often","Very often","About right","Not often enough","Never"))
+f11<-freq("q11",1:2,c("Yes","No")); f12<-freq("q12",1:2,c("Yes","No"))
+kt(data.frame(Measure=c("Statement frequency: about right","Statement frequency: not often enough","Statements understandable: yes","Account information confidential: yes"),Count=c(f9$n[3],f9$n[4],f11$n[1],f12$n[1]),Valid_n=c(128,128,128,106),Missing=c(0,0,0,22),`Valid %`=c(f9[[3]][3],f9[[3]][4],f11[[3]][1],f12[[3]][1]),check.names=FALSE),1)
+```
+
+Most members find statements understandable; fewer confirm account-information confidentiality (@tbl-account-information).
+
+Q10r accuracy: **n = 128, mean = `r fmt(mean(xnum("q10r")))`, SD = `r fmt(sd(xnum("q10r")))`** (1 poor–4 excellent).
+
+Q9r = 6 − Q9 gives **M = `r fmt(mean(6-xnum("q9")))`, SD = `r fmt(sd(6-xnum("q9")))`** (1 never–5 too often). “About right” is the target, rather than a higher score.
+
+Q11: 3 answered “No” (2.3%). Q12: 32 answered “No” (30.2% of valid responses).
+
+## R6 · Descriptive statistics: operational ratings {.smaller}
+
+Q31–Q34: 1 strongly disagree, 2 disagree, 3 uncertain, 4 agree, 5 strongly agree.
+
+```{r}
+#| label: tbl-operational-ratings
+#| tbl-cap: "Operational effectiveness ratings"
+rt<-summary_rows(ops,oplabels)
+rt$`Agree % (4–5)`<-sapply(ops,function(v)100*mean(xnum(v)>=4,na.rm=TRUE))
+rt$`Uncertain % (3)`<-sapply(ops,function(v)100*mean(xnum(v)==3,na.rm=TRUE))
+rt$`Disagree % (1–2)`<-sapply(ops,function(v)100*mean(xnum(v)<=2,na.rm=TRUE))
+kt(rt,2)
+```
+
+Confidentiality has the highest mean; application simplicity has the lowest (@tbl-operational-ratings).
+
+## R6 · One-sample t-tests: favorable ratings {.smaller}
+
+All four mean ratings exceed 3, the scale midpoint. Confidence intervals below describe the **mean difference from 3**.
+
+```{r}
+#| label: tbl-operational-tests
+#| tbl-cap: "One-sample tests against the midpoint of 3"
+tab<-tests[,c("Item","Difference","CI_low","CI_high","t","df")]
+tab$`p (unadjusted)`<-pfmt(tests$p);tab$`p (Holm)`<-pfmt(tests$p_holm)
+kt(tab)
+```
+
+All four differences remain significant after correction for multiple tests (Holm-adjusted p < .001 each; @tbl-operational-tests).
+
+The 95% intervals are individual, not simultaneous. Tests assume independent responses; findings may not generalize beyond this sample.
+
+## R6 · Frequencies: favorable management ratings
+
+Q37r: 1 very poor, 2 poor, 3 average, 4 good, 5 excellent.
+
+```{r}
+#| label: tbl-management
+#| tbl-cap: "Overall management and operation ratings"
+kt(freq("q37r",1:5,c("Very poor","Poor","Average","Good","Excellent")),1)
+```
+
+**n = 121; missing = 7. Good or excellent: `r fmt(100*mean(xnum("q37r")>=4,na.rm=TRUE),1)`%.**
+
+Overall ratings are favorable (@tbl-management; M = **`r fmt(mean(xnum("q37r"),na.rm=TRUE))`**, SD = **`r fmt(sd(xnum("q37r"),na.rm=TRUE))`**).
+
+## Conclusions and priorities
+
+- **R1:** Savings rates are near average; joining reasons are unavailable.
+- **R2:** Rate opinions are near the midpoint; outside borrowing reasons are unavailable.
+- **R5:** Verify low share-account awareness before planning outreach.
+- **R6:** Ratings are favorable overall. Review statement frequency and account-information confidentiality.
+
+
+## Appendix
+
+- [GitHub repository](https://github.com/gmonjarrez/case31-data-analysis)
+- [Published report](https://gmonjarrez.github.io/case31-data-analysis/Monjarrez-Georgia-Case31-Summary.html)
