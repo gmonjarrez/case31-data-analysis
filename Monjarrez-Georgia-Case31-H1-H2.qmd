@@ -1,0 +1,127 @@
+---
+title: "Case 31 | Hypothesis Tests for H1 and H2"
+subtitle: "Employees Federal Credit Union"
+author: "Georgia Monjarrez"
+format:
+  html:
+    toc: true
+    embed-resources: true
+    code-fold: true
+execute:
+  warning: false
+  message: false
+---
+
+## Data and methods
+
+Both tests use complete responses from the cleaned Canvas dataset and a .05 significance level. Five-point ratings are treated as approximately interval. The data source was `Case 31 Data_efcu_4.sav`.
+
+```{r}
+library(haven)
+library(knitr)
+survey <- read_sav("Case 31 Data_efcu_4.sav")
+names(survey) <- tolower(names(survey))
+score <- function(x) {
+  x <- as.numeric(x)
+  replace(x, !x %in% 1:5, NA_real_)
+}
+describe <- function(x) c(N = length(x), Mean = mean(x), SD = sd(x))
+p_text <- function(p) {
+  if (p < .001) "< .001" else paste0("= ", sprintf("%.3f", p))
+}
+```
+
+## H1 | Account awareness and service adequacy
+
+### Descriptive statistics
+
+A one-way ANOVA tests whether mean service adequacy (Q33) differs across the three regular share account awareness groups (Q13r).
+
+```{r}
+#| label: tbl-h1-groups
+#| tbl-cap: "Service adequacy ratings by regular share account awareness"
+h1 <- na.omit(data.frame(
+  awareness = factor(as.numeric(survey$q13_r), levels = 1:3,
+    labels = c("Unaware", "Aware, never used", "Aware and used")),
+  adequacy = score(survey$q33)
+))
+groups <- split(h1$adequacy, h1$awareness)
+group_stats <- t(vapply(groups, describe, numeric(3)))
+kable(group_stats, digits = 2)
+```
+
+### One-way ANOVA and follow-up comparisons
+
+```{r}
+#| label: tbl-h1-anova
+#| tbl-cap: "One-way ANOVA for service adequacy"
+fit <- aov(adequacy ~ awareness, data = h1)
+a <- summary(fit)[[1]]
+eta2 <- a[1, "Sum Sq"] / sum(a[, "Sum Sq"])
+kable(a, digits = 3)
+```
+
+```{r}
+#| label: tbl-h1-tukey
+#| tbl-cap: "Tukey-adjusted comparisons of mean service adequacy"
+posthoc <- TukeyHSD(fit)$awareness
+kable(posthoc, digits = 3,
+      col.names = c("Mean difference", "95% CI lower", "95% CI upper", "Adjusted p"))
+```
+
+```{r}
+#| label: tbl-h1-checks
+#| tbl-cap: "ANOVA diagnostics and rank-based sensitivity check"
+checks <- c(
+  "Shapiro–Wilk (residual normality)" = shapiro.test(residuals(fit))$p.value,
+  "Fligner–Killeen (equal variances)" =
+    fligner.test(adequacy ~ awareness, data = h1)$p.value,
+  "Kruskal–Wallis (rank-based sensitivity)" =
+    kruskal.test(adequacy ~ awareness, data = h1)$p.value
+)
+kable(data.frame(Test = names(checks), p = vapply(checks, p_text, character(1))), row.names = FALSE)
+```
+
+Service adequacy differed by awareness group (*F*(2, 125) = `r sprintf("%.2f", a[1, "F value"])`, *p* `r p_text(a[1, "Pr(>F)"])`, η² = `r sprintf("%.3f", eta2)`). Account users gave the lowest rating (3.08 out of 5). They scored 0.55 points below unaware members (Tukey-adjusted p = .017) and 0.64 below aware nonusers (adjusted p = .011). The latter two groups did not differ significantly (adjusted p = .782). Residuals departed from normality, and the Kruskal–Wallis check also found a group difference (p = .029).
+
+## H2 | Borrowing rates and agreement that rates are lower
+
+### Descriptive statistics and paired-samples t-test
+
+A paired t-test compares each member’s borrowing-rate rating (Q8r) with their agreement that credit union rates are lower than competitors’ (Q30). Responses marked “no opinion” were excluded.
+
+```{r}
+#| label: tbl-h2-descriptives
+#| tbl-cap: "Loan-rate ratings and differences among complete pairs"
+h2 <- na.omit(data.frame(rate = score(survey$q8_r), lower = score(survey$q30)))
+difference <- h2$rate - h2$lower
+paired <- t.test(h2$rate, h2$lower, paired = TRUE)
+values <- list("Q8r: Borrowing-rate rating" = h2$rate,
+               "Q30: Agreement rates are lower" = h2$lower,
+               "Difference (Q8r minus Q30)" = difference)
+kable(t(vapply(values, describe, numeric(3))), digits = 2)
+```
+
+```{r}
+#| label: tbl-h2-tests
+#| tbl-cap: "Primary paired test and direction-aligned sensitivity check"
+aligned <- t.test(6 - h2$rate, h2$lower, paired = TRUE)
+test_row <- function(test) c(
+  Difference = unname(test$estimate), Lower = test$conf.int[1],
+  Upper = test$conf.int[2], t = unname(test$statistic),
+  df = unname(test$parameter), p = test$p.value
+)
+kable(rbind("Assigned coding" = test_row(paired),
+            "Direction-aligned coding" = test_row(aligned)), digits = 3,
+      col.names = c("Difference", "95% CI lower", "95% CI upper", "t", "df", "p"))
+```
+
+With the assigned coding, the mean paired difference was `r sprintf("%.2f", mean(difference))` points (95% CI `r sprintf("%.2f", paired$conf.int[1])` to `r sprintf("%.2f", paired$conf.int[2])`, *t*(`r unname(paired$parameter)`) = `r sprintf("%.2f", paired$statistic)`, *p* `r p_text(paired$p.value)`). The data provide insufficient evidence of a difference.
+
+Higher Q8r scores mean higher perceived rates. Higher Q30 scores mean stronger agreement that rates are lower than competitors’. Reversing Q8r to align the directions gave a mean difference of −0.20 points (p = .020).
+
+## Appendix
+
+- [GitHub repository](https://github.com/gmonjarrez/case31-data-analysis)
+- [Quarto source on GitHub](https://github.com/gmonjarrez/case31-data-analysis/blob/main/Monjarrez-Georgia-Case31-H1-H2.qmd)
+- [GitHub Pages report](https://gmonjarrez.github.io/case31-data-analysis/Monjarrez-Georgia-Case31-H1-H2.html)
