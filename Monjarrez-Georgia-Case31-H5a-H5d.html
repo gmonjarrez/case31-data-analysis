@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Georgia Monjarrez" />
+  <title>Case 31 | Operational Efficiency</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <style>
+  :root{color-scheme:light;--ink:#202a36;--accent:#164d6c;--line:#dce5eb}
+  *{box-sizing:border-box}
+  body{max-width:1080px;margin:3rem auto;padding:0 1.5rem;color:var(--ink);background:white;font:16px/1.62 system-ui,sans-serif}
+  h1,h2,h3{line-height:1.2;color:var(--accent)} h1{font-size:2.35rem;margin-bottom:.3em}
+  h2{border-top:1px solid var(--line);padding-top:1em;margin-top:2em} h3{font-size:1.12rem}
+  .subtitle{font-size:1.25rem;margin:.25rem 0}.author{margin:.25rem 0 1.75rem}
+  nav{padding:1rem 1.4rem;background:#eff5f8;border-radius:8px}nav ul{margin:.3rem 0}
+  a{color:var(--accent)} .result-table{overflow-x:auto;margin:1.25rem 0 1.5rem}
+  table{border-collapse:collapse;width:100%;font-size:.875rem}
+  th,td{padding:.42rem .55rem;border-bottom:1px solid var(--line);text-align:left}
+  th{background:#eaf2f6}tr:nth-child(even){background:#f7fafb}
+  </style>
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">Case 31 | Operational Efficiency</h1>
+<p class="subtitle">Multiple regression for H5a–H5d</p>
+<p class="author">Georgia Monjarrez</p>
+</header>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#model" id="toc-model">Model</a></li>
+<li><a href="#results" id="toc-results">Results</a></li>
+<li><a href="#appendix" id="toc-appendix">Appendix</a></li>
+</ul>
+</nav>
+<h2 id="model">Model</h2>
+<p>A multiple regression modeled the overall efficiency rating (Q37r, 1
+= very poor, 5 = excellent) using Q31–Q34. Seven respondents lacked a
+valid Q37r rating, leaving 121 for analysis.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>survey <span class="ot">&lt;-</span> <span class="fu">read_sav</span>(<span class="st">&quot;Case 31 Data_efcu_4.sav&quot;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(survey) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">names</span>(survey))</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">lm</span>(q37_r <span class="sc">~</span> q31 <span class="sc">+</span> q32 <span class="sc">+</span> q33 <span class="sc">+</span> q34, <span class="at">data =</span> survey)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>model_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(fit)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>f <span class="ot">&lt;-</span> model_summary<span class="sc">$</span>fstatistic</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>model_p <span class="ot">&lt;-</span> <span class="fu">pf</span>(f[<span class="dv">1</span>], f[<span class="dv">2</span>], f[<span class="dv">3</span>], <span class="at">lower.tail =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<h2 id="results">Results</h2>
+<p>The model explained <strong>30.1%</strong> of the variation in
+ratings (adjusted R² = .276, F(4, 116) = 12.46, p &lt; .001).</p>
+<div id="tbl-coefficients" class="result-table">
+<p><strong>Table 1.</strong> Multiple regression coefficients</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>est <span class="ot">&lt;-</span> <span class="fu">coef</span>(model_summary)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ci <span class="ot">&lt;-</span> <span class="fu">confint</span>(fit)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">data.frame</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">Term =</span> <span class="fu">c</span>(<span class="st">&quot;Intercept&quot;</span>, <span class="st">&quot;H5a: Confidentiality (Q31)&quot;</span>,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;H5b: Prompt processing (Q32)&quot;</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;H5c: Services meet needs (Q33)&quot;</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>           <span class="st">&quot;H5d: Easy applications (Q34)&quot;</span>),</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">b =</span> est[, <span class="dv">1</span>], <span class="at">SE =</span> est[, <span class="dv">2</span>], <span class="at">t =</span> est[, <span class="dv">3</span>],</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">p =</span> <span class="fu">format.pval</span>(est[, <span class="dv">4</span>], <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">eps =</span> .<span class="dv">001</span>),</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">&quot;95% CI lower&quot;</span> <span class="ot">=</span> ci[, <span class="dv">1</span>], <span class="st">&quot;95% CI upper&quot;</span> <span class="ot">=</span> ci[, <span class="dv">2</span>],</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">check.names =</span> <span class="cn">FALSE</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>), <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<table>
+<colgroup>
+<col style="width: 36%" />
+<col style="width: 8%" />
+<col style="width: 7%" />
+<col style="width: 8%" />
+<col style="width: 9%" />
+<col style="width: 15%" />
+<col style="width: 15%" />
+</colgroup>
+<thead>
+<tr>
+<th style="text-align: left;">Term</th>
+<th style="text-align: right;">b</th>
+<th style="text-align: right;">SE</th>
+<th style="text-align: right;">t</th>
+<th style="text-align: left;">p</th>
+<th style="text-align: right;">95% CI lower</th>
+<th style="text-align: right;">95% CI upper</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Intercept</td>
+<td style="text-align: right;">1.347</td>
+<td style="text-align: right;">0.480</td>
+<td style="text-align: right;">2.806</td>
+<td style="text-align: left;">0.00588</td>
+<td style="text-align: right;">0.396</td>
+<td style="text-align: right;">2.298</td>
+</tr>
+<tr>
+<td style="text-align: left;">H5a: Confidentiality (Q31)</td>
+<td style="text-align: right;">0.188</td>
+<td style="text-align: right;">0.089</td>
+<td style="text-align: right;">2.116</td>
+<td style="text-align: left;">0.03647</td>
+<td style="text-align: right;">0.012</td>
+<td style="text-align: right;">0.365</td>
+</tr>
+<tr>
+<td style="text-align: left;">H5b: Prompt processing (Q32)</td>
+<td style="text-align: right;">0.308</td>
+<td style="text-align: right;">0.083</td>
+<td style="text-align: right;">3.709</td>
+<td style="text-align: left;">&lt; 0.001</td>
+<td style="text-align: right;">0.143</td>
+<td style="text-align: right;">0.472</td>
+</tr>
+<tr>
+<td style="text-align: left;">H5c: Services meet needs (Q33)</td>
+<td style="text-align: right;">0.294</td>
+<td style="text-align: right;">0.086</td>
+<td style="text-align: right;">3.401</td>
+<td style="text-align: left;">&lt; 0.001</td>
+<td style="text-align: right;">0.123</td>
+<td style="text-align: right;">0.466</td>
+</tr>
+<tr>
+<td style="text-align: left;">H5d: Easy applications (Q34)</td>
+<td style="text-align: right;">-0.068</td>
+<td style="text-align: right;">0.079</td>
+<td style="text-align: right;">-0.863</td>
+<td style="text-align: left;">0.39014</td>
+<td style="text-align: right;">-0.225</td>
+<td style="text-align: right;">0.089</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="hypothesis-decisions">Hypothesis decisions</h3>
+<p>Each coefficient is the change in the efficiency rating per one-point
+increase in the predictor, holding the other three constant. Decisions
+use two-sided tests at α = .05.</p>
+<ul>
+<li><strong>H5a supported.</strong> Confidentiality was positively
+associated with efficiency (b = 0.19, p = .036).</li>
+<li><strong>H5b supported.</strong> Prompt loan processing had the
+largest positive coefficient (b = 0.31, p &lt; .001).</li>
+<li><strong>H5c supported.</strong> Meeting member needs was positively
+associated with efficiency (b = 0.29, p &lt; .001).</li>
+<li><strong>H5d unsupported.</strong> The estimate for ease of
+completing loan applications was inconclusive (b = −0.07, p =
+.390).</li>
+</ul>
+<h3 id="model-diagnostics">Model diagnostics</h3>
+<div id="tbl-diagnostics" class="result-table">
+<p><strong>Table 2.</strong> Model diagnostics</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>vif <span class="ot">&lt;-</span> <span class="fu">diag</span>(<span class="fu">solve</span>(<span class="fu">cor</span>(<span class="fu">model.frame</span>(fit)[, <span class="sc">-</span><span class="dv">1</span>])))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(<span class="fu">data.frame</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">Metric =</span> <span class="fu">c</span>(<span class="st">&quot;Complete cases&quot;</span>, <span class="st">&quot;Residual standard error&quot;</span>, <span class="st">&quot;R²&quot;</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;Adjusted R²&quot;</span>, <span class="st">&quot;Overall F&quot;</span>, <span class="st">&quot;Overall p&quot;</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>             <span class="st">&quot;Largest VIF&quot;</span>, <span class="st">&quot;Largest Cook’s distance&quot;</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">Value =</span> <span class="fu">c</span>(<span class="fu">nobs</span>(fit), <span class="fu">round</span>(model_summary<span class="sc">$</span>sigma, <span class="dv">3</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="fu">round</span>(model_summary<span class="sc">$</span>r.squared, <span class="dv">3</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>            <span class="fu">round</span>(model_summary<span class="sc">$</span>adj.r.squared, <span class="dv">3</span>), <span class="fu">round</span>(f[<span class="dv">1</span>], <span class="dv">2</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            <span class="fu">format.pval</span>(model_p, <span class="at">digits =</span> <span class="dv">3</span>, <span class="at">eps =</span> .<span class="dv">001</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>            <span class="fu">round</span>(<span class="fu">max</span>(vif), <span class="dv">2</span>), <span class="fu">round</span>(<span class="fu">max</span>(<span class="fu">cooks.distance</span>(fit)), <span class="dv">3</span>))</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Metric</th>
+<th style="text-align: left;">Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left;">Complete cases</td>
+<td style="text-align: left;">121</td>
+</tr>
+<tr>
+<td style="text-align: left;">Residual standard error</td>
+<td style="text-align: left;">0.619</td>
+</tr>
+<tr>
+<td style="text-align: left;">R²</td>
+<td style="text-align: left;">0.301</td>
+</tr>
+<tr>
+<td style="text-align: left;">Adjusted R²</td>
+<td style="text-align: left;">0.276</td>
+</tr>
+<tr>
+<td style="text-align: left;">Overall F</td>
+<td style="text-align: left;">12.46</td>
+</tr>
+<tr>
+<td style="text-align: left;">Overall p</td>
+<td style="text-align: left;">&lt;0.001</td>
+</tr>
+<tr>
+<td style="text-align: left;">Largest VIF</td>
+<td style="text-align: left;">1.4</td>
+</tr>
+<tr>
+<td style="text-align: left;">Largest Cook’s distance</td>
+<td style="text-align: left;">0.171</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>VIFs ranged from 1.07 to 1.40. The model treats the five-point
+outcome as approximately interval. Ratings clustered at the top of the
+scale (102 of 121 were 4 or 5).</p>
+<h2 id="appendix">Appendix</h2>
+<ul>
+<li><a href="https://github.com/gmonjarrez/case31-data-analysis">GitHub
+repository</a></li>
+<li><a
+href="https://gmonjarrez.github.io/case31-data-analysis/Monjarrez-Georgia-Case31-H5a-H5d.html">GitHub
+Pages report</a></li>
+</ul>
+</body>
+</html>
