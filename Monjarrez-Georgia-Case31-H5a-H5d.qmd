@@ -1,0 +1,82 @@
+---
+title: "Case 31 | Operational Efficiency"
+subtitle: "Multiple regression for H5a–H5d"
+author: "Georgia Monjarrez"
+format:
+  html:
+    toc: true
+    embed-resources: true
+execute:
+  echo: true
+---
+
+## Model
+
+A multiple regression modeled the overall efficiency rating (Q37r, 1 = very poor, 5 = excellent) using Q31–Q34. Seven respondents lacked a valid Q37r rating, leaving 121 for analysis.
+
+```{r}
+library(haven)
+library(knitr)
+
+survey <- read_sav("Case 31 Data_efcu_4.sav")
+names(survey) <- tolower(names(survey))
+fit <- lm(q37_r ~ q31 + q32 + q33 + q34, data = survey)
+model_summary <- summary(fit)
+f <- model_summary$fstatistic
+model_p <- pf(f[1], f[2], f[3], lower.tail = FALSE)
+```
+
+## Results
+
+The model explained **30.1%** of the variation in ratings (adjusted R² = .276, F(4, 116) = 12.46, p < .001).
+
+```{r}
+#| label: tbl-coefficients
+#| tbl-cap: "Multiple regression coefficients"
+est <- coef(model_summary)
+ci <- confint(fit)
+kable(data.frame(
+  Term = c("Intercept", "H5a: Confidentiality (Q31)",
+           "H5b: Prompt processing (Q32)",
+           "H5c: Services meet needs (Q33)",
+           "H5d: Easy applications (Q34)"),
+  b = est[, 1], SE = est[, 2], t = est[, 3],
+  p = format.pval(est[, 4], digits = 3, eps = .001),
+  "95% CI lower" = ci[, 1], "95% CI upper" = ci[, 2],
+  check.names = FALSE
+), digits = 3, row.names = FALSE)
+```
+
+### Hypothesis decisions
+
+Each coefficient is the change in the efficiency rating per one-point increase in the predictor, holding the other three constant. Decisions use two-sided tests at α = .05.
+
+- **H5a supported.** Confidentiality was positively associated with efficiency (b = 0.19, p = .036).
+- **H5b supported.** Prompt loan processing had the largest positive coefficient (b = 0.31, p < .001).
+- **H5c supported.** Meeting member needs was positively associated with efficiency (b = 0.29, p < .001).
+- **H5d unsupported.** The estimate for ease of completing loan applications was inconclusive (b = −0.07, p = .390).
+
+### Model diagnostics
+
+```{r}
+#| label: tbl-diagnostics
+#| tbl-cap: "Model diagnostics"
+vif <- diag(solve(cor(model.frame(fit)[, -1])))
+kable(data.frame(
+  Metric = c("Complete cases", "Residual standard error", "R²",
+             "Adjusted R²", "Overall F", "Overall p",
+             "Largest VIF", "Largest Cook’s distance"),
+  Value = c(nobs(fit), round(model_summary$sigma, 3),
+            round(model_summary$r.squared, 3),
+            round(model_summary$adj.r.squared, 3), round(f[1], 2),
+            format.pval(model_p, digits = 3, eps = .001),
+            round(max(vif), 2), round(max(cooks.distance(fit)), 3))
+), row.names = FALSE)
+```
+
+VIFs ranged from 1.07 to 1.40. The model treats the five-point outcome as approximately interval. Ratings clustered at the top of the scale (102 of 121 were 4 or 5).
+
+## Appendix
+
+- [GitHub repository](https://github.com/gmonjarrez/case31-data-analysis)
+- [GitHub Pages report](https://gmonjarrez.github.io/case31-data-analysis/Monjarrez-Georgia-Case31-H5a-H5d.html)
